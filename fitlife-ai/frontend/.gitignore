@@ -1,0 +1,16 @@
+# Arquivos gerados do Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# IDE e sistema operacional
+.idea/
+*.iml
+*.iws
+.vscode/
+.DS_Store
+Thumbs.db
