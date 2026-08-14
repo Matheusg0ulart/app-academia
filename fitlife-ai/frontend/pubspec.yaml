@@ -11,6 +11,20 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
 
+  # ── Banco de dados local (SQLite) ──────────────────────────
+  sqflite: ^2.3.3
+  path: ^1.9.0
+
+  # ── HTTP / API ─────────────────────────────────────────────
+  http: ^1.2.2
+
+  # ── Persistência de preferências (token JWT, user_id) ─────
+  shared_preferences: ^2.3.2
+
+  # ── Utilitários ────────────────────────────────────────────
+  connectivity_plus: ^6.0.3   # detecta se há conexão (para sync)
+  intl: ^0.19.0               # formatação de datas
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
