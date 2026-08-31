@@ -3,11 +3,14 @@
 // Camada de acesso ao SQLite local.
 // Todas as operações de leitura e escrita offline passam por aqui.
 
+import 'package:sqflite/sqflite.dart' show ConflictAlgorithm;
 import '../core/database/database_helper.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 import '../models/workout_log.dart';
 import '../models/user.dart';
+import '../models/nutrition.dart';
+import '../models/measurement.dart';
 
 class LocalDbService {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -219,6 +222,42 @@ class LocalDbService {
   }
 
   // ═══════════════════════════════════════════════════════════
+  // NUTRIÇÃO & REFEIÇÕES
+  // ═══════════════════════════════════════════════════════════
+
+  Future<int> createNutritionLog(NutritionLog log) async {
+    return _db.insert('nutrition_logs', log.toMap());
+  }
+
+  Future<List<NutritionLog>> getNutritionLogsByDate(int userId, String date) async {
+    final rows = await _db.query(
+      'nutrition_logs',
+      where:     'user_id = ? AND logged_date = ?',
+      whereArgs: [userId, date],
+    );
+    return rows.map(NutritionLog.fromMap).toList();
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // MEDIDAS CORPORAIS
+  // ═══════════════════════════════════════════════════════════
+
+  Future<int> createMeasurement(BodyMeasurement measurement) async {
+    return _db.insert('body_measurements', measurement.toMap());
+  }
+
+  Future<List<BodyMeasurement>> getMeasurements(int userId, {int limit = 30}) async {
+    final rows = await _db.query(
+      'body_measurements',
+      where:     'user_id = ?',
+      whereArgs: [userId],
+      orderBy:   'measured_at DESC',
+      limit:     limit,
+    );
+    return rows.map(BodyMeasurement.fromMap).toList();
+  }
+
+  // ═══════════════════════════════════════════════════════════
   // SINCRONIZAÇÃO — retorna registros pendentes
   // ═══════════════════════════════════════════════════════════
 
@@ -258,6 +297,3 @@ class LocalDbService {
     );
   }
 }
-
-// Importação necessária para ConflictAlgorithm dentro da transaction
-import 'package:sqflite/sqflite.dart' show ConflictAlgorithm;
