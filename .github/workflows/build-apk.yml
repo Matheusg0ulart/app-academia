@@ -8,6 +8,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Android APK
@@ -26,39 +29,44 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
           channel: 'stable'
+          cache: true
 
-      - name: Get Dependencies
+      - name: Recreate Android Project Scaffold
+        working-directory: fitlife-ai/frontend
+        run: |
+          flutter create . --platforms=android --project-name=fitlife_ai
+
+      - name: Get Flutter Dependencies
         working-directory: fitlife-ai/frontend
         run: flutter pub get
 
-      - name: Build APK Release
+      - name: Build Android APK Release
         working-directory: fitlife-ai/frontend
         run: flutter build apk --release
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fitlife-ai-release-apk
+          name: fitlife-ai-apk
           path: fitlife-ai/frontend/build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Create GitHub Release (on Tags)
+      - name: Publish GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: fitlife-ai/frontend/build/app/outputs/flutter-apk/app-release.apk
           name: FitLife AI ${{ github.ref_name }}
           body: |
-            ## 🏋️‍♂️ FitLife AI — Versão Oficial
+            ## 🏋️‍♂️ FitLife AI — Versão Oficial Android
             
-            Baixe o arquivo **`app-release.apk`** abaixo para instalar o aplicativo no seu Android.
+            Baixe o arquivo **`app-release.apk`** abaixo para instalar no seu celular.
             
             ### ✨ Novidades:
-            - Scanner de Prato com Google Gemini Vision AI 📸
-            - Base TACO + Open Food Facts com Barcode 🥗
-            - Gerador de Treinos com IA e Cronômetro HIIT/Tabata ⏱️
-            - Conquistas, Níveis e Gamificação 🏆
-            - Gráficos Visuais de Evolução e Calculadora de Anilhas 📊
+            - 📸 Scanner de Prato com Google Gemini Vision AI
+            - 🥗 Tabela TACO + Open Food Facts com Barcode
+            - ⏱️ Cronômetro HIIT, Tabata e EMOM
+            - 🏆 Gamificação, Níveis e Conquistas
+            - 📊 Gráficos de Evolução e Calculadora de Anilhas
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
