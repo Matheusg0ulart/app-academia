@@ -1,0 +1,64 @@
+name: Build & Release APK
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Get Dependencies
+        working-directory: fitlife-ai/frontend
+        run: flutter pub get
+
+      - name: Build APK Release
+        working-directory: fitlife-ai/frontend
+        run: flutter build apk --release
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fitlife-ai-release-apk
+          path: fitlife-ai/frontend/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create GitHub Release (on Tags)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: fitlife-ai/frontend/build/app/outputs/flutter-apk/app-release.apk
+          name: FitLife AI ${{ github.ref_name }}
+          body: |
+            ## 🏋️‍♂️ FitLife AI — Versão Oficial
+            
+            Baixe o arquivo **`app-release.apk`** abaixo para instalar o aplicativo no seu Android.
+            
+            ### ✨ Novidades:
+            - Scanner de Prato com Google Gemini Vision AI 📸
+            - Base TACO + Open Food Facts com Barcode 🥗
+            - Gerador de Treinos com IA e Cronômetro HIIT/Tabata ⏱️
+            - Conquistas, Níveis e Gamificação 🏆
+            - Gráficos Visuais de Evolução e Calculadora de Anilhas 📊
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
