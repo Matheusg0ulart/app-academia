@@ -232,3 +232,4 @@ Distribuído sob a licença MIT. Consulte `LICENSE` para obter mais informaçõe
 <div align="center">
 Desenvolvido com 💚 e dedicação por <b>Matheus Ferreira Goulart</b>.
 </div>
+
