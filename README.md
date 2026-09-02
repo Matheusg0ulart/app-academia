@@ -2,6 +2,7 @@
 
 # 🏋️‍♂️ FitLife AI — Ecossistema Inteligente de Saúde, Treino & Nutrição
 
+[![Download APK](https://img.shields.io/badge/📲%20Download%20APK-Android%20Release-00E676?style=for-the-badge&logo=android&logoColor=black)](https://github.com/Matheusg0ulart/app-academia/releases)
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![Google Gemini AI](https://img.shields.io/badge/Google%20Gemini-Vision%20%26%20Text-8E75B2?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com)
@@ -10,6 +11,8 @@
 [![Tests](https://img.shields.io/badge/Tests-22%2F22%20Passing-brightgreen?style=for-the-badge)](https://nodejs.org/api/test.html)
 
 **O aplicativo definitivo para musculação, dieta flexível e acompanhamento físico potencializado por Inteligência Artificial.**
+
+> 🚀 **Avaliadores & Entrevistadores:** Para testar o aplicativo imediatamente no seu smartphone Android sem precisar compilar o código, baixe o APK pronto em **[Releases](https://github.com/Matheusg0ulart/app-academia/releases)**!
 
 ---
 
@@ -94,21 +97,46 @@ graph TD
 
 ## 4. 📱 Como Baixar e Instalar o APK (Android)
 
-Para instalar o aplicativo diretamente no seu celular Android:
+> 💡 **Dica para Avaliadores & Entrevistadores:** Não é necessário configurar ambiente local nem compilar código para testar a aplicação no celular! Você pode baixar o APK compilado diretamente abaixo em segundos:
 
-### Opção 1: Download Direto (Releases)
-1. Acesse a aba **[Releases](https://github.com/Matheusg0ulart/app-academia/releases)** deste repositório;
-2. Baixe o arquivo **`fitlife-ai.apk`** da versão mais recente;
-3. No celular, abra o arquivo baixado e autorize a instalação de fontes desconhecidas se solicitado;
-4. Pronto! O **FitLife AI** estará pronto para uso.
+<div align="center">
 
-### Opção 2: Gerar o APK pelo Código Fonte
-Se tiver o Flutter instalado na sua máquina, gere o APK em modo release com:
+### 📥 Opção 1: Download Direto (Releases do GitHub)
+
+[![Baixar APK no GitHub Releases](https://img.shields.io/badge/⬇️%20BAIXAR%20FITLIFE--AI.APK-00E676?style=for-the-badge&logo=android&logoColor=black&labelColor=1E293B)](https://github.com/Matheusg0ulart/app-academia/releases)
+
+🔗 **[Acessar a página de Releases para baixar a versão mais recente](https://github.com/Matheusg0ulart/app-academia/releases)**
+
+</div>
+
+#### 📋 Passo a Passo de Instalação:
+
+| Etapa | Ação | O que fazer |
+| :---: | :--- | :--- |
+| **1** | **Download** | Acesse [Releases](https://github.com/Matheusg0ulart/app-academia/releases) pelo celular e baixe o arquivo `fitlife-ai.apk` (ou `app-release.apk`). |
+| **2** | **Abrir** | Toque na notificação de download concluído ou abra o gerenciador de arquivos do celular na pasta **Downloads**. |
+| **3** | **Permissão** | Caso o Android solicite autorização para *"Instalar aplicativos de fontes desconhecidas"*, clique em **Configurações** e marque a opção **Permitir desta fonte**. |
+| **4** | **Pronto!** | Clique em **Instalar** e abra o aplicativo. O **FitLife AI** estará 100% pronto para uso e demonstração. |
+
+---
+
+### 🛠️ Opção 2: Gerar o APK pelo Código Fonte (Desenvolvedores)
+
+Se você possui o [Flutter SDK](https://flutter.dev) instalado e prefere gerar o build manualmente:
+
 ```bash
+# 1. Navegue até a pasta do frontend
 cd fitlife-ai/frontend
+
+# 2. Obtenha as dependências
+flutter pub get
+
+# 3. Gere o APK de produção otimizado
 flutter build apk --release
 ```
-O arquivo `.apk` será gerado na pasta: `build/app/outputs/flutter-apk/app-release.apk`.
+
+O arquivo `.apk` final será gerado no diretório:  
+📂 `fitlife-ai/frontend/build/app/outputs/flutter-apk/app-release.apk`
 
 ---
 
@@ -232,4 +260,3 @@ Distribuído sob a licença MIT. Consulte `LICENSE` para obter mais informaçõe
 <div align="center">
 Desenvolvido com 💚 e dedicação por <b>Matheus Ferreira Goulart</b>.
 </div>
-
