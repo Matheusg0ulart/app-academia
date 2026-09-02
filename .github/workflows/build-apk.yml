@@ -32,12 +32,23 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Scaffold Android
+      - name: Scaffold Android Project (Preserving Dependencies)
         working-directory: fitlife-ai/frontend
         run: |
+          cp pubspec.yaml pubspec.yaml.bak
           flutter create . --platforms=android --org=com.fitlife --project-name=fitlife_ai
+          cp pubspec.yaml.bak pubspec.yaml
+          rm pubspec.yaml.bak
 
-      - name: Get Dependencies
+      - name: Configure Android SDK & Gradle
+        working-directory: fitlife-ai/frontend
+        run: |
+          find android/ -type f \( -name "*.gradle" -o -name "*.gradle.kts" \) -exec sed -i 's/flutter.minSdkVersion/21/g' {} +
+          find android/ -type f \( -name "*.gradle" -o -name "*.gradle.kts" \) -exec sed -i 's/flutter.compileSdkVersion/34/g' {} +
+          find android/ -type f \( -name "*.gradle" -o -name "*.gradle.kts" \) -exec sed -i 's/minSdk = .*/minSdk = 21/g' {} +
+          find android/ -type f \( -name "*.gradle" -o -name "*.gradle.kts" \) -exec sed -i 's/compileSdk = .*/compileSdk = 34/g' {} +
+
+      - name: Get Flutter Dependencies
         working-directory: fitlife-ai/frontend
         run: flutter pub get
 
