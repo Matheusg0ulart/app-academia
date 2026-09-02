@@ -23,7 +23,7 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Setup Flutter SDK
@@ -32,18 +32,59 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Recreate Android Project Scaffold
+      - name: Recreate Android Scaffold & Configure SDK
         working-directory: fitlife-ai/frontend
         run: |
-          flutter create . --platforms=android --project-name=fitlife_ai
+          flutter create . --platforms=android --org=com.fitlife --project-name=fitlife_ai
+          
+          python3 -c "
+          import os, glob
+          for p in glob.glob('android/**/*.gradle*', recursive=True):
+              try:
+                  with open(p, 'r') as f:
+                      c = f.read()
+                  c = c.replace('flutter.minSdkVersion', '21')
+                  c = c.replace('flutter.compileSdkVersion', '34')
+                  c = c.replace('minSdk = flutter.minSdkVersion', 'minSdk = 21')
+                  c = c.replace('minSdkVersion flutter.minSdkVersion', 'minSdkVersion 21')
+                  c = c.replace('compileSdk = flutter.compileSdkVersion', 'compileSdk = 34')
+                  c = c.replace('compileSdkVersion flutter.compileSdkVersion', 'compileSdkVersion 34')
+                  with open(p, 'w') as f:
+                      f.write(c)
+                  print(f'Patched {p}')
+              except Exception as e:
+                  print(f'Error patching {p}: {e}')
+          "
 
-      - name: Get Flutter Dependencies
+      - name: Configure Android Manifest Permissions
+        working-directory: fitlife-ai/frontend
+        run: |
+          python3 -c "
+          import os
+          manifest_path = 'android/app/src/main/AndroidManifest.xml'
+          if os.path.exists(manifest_path):
+              with open(manifest_path, 'r') as f:
+                  m = f.read()
+              perms = '''
+    <uses-permission android:name=\"android.permission.INTERNET\"/>
+    <uses-permission android:name=\"android.permission.CAMERA\"/>
+    <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>
+    <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>
+'''
+              if '<uses-permission' not in m:
+                  m = m.replace('<application', perms + '    <application')
+                  with open(manifest_path, 'w') as f:
+                      f.write(m)
+                  print('Permissions added to AndroidManifest.xml')
+          "
+
+      - name: Get Dependencies
         working-directory: fitlife-ai/frontend
         run: flutter pub get
 
       - name: Build Android APK Release
         working-directory: fitlife-ai/frontend
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Prepare APK Release Artifacts
         run: |
@@ -65,6 +106,7 @@ jobs:
           name: FitLife AI ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v1.0.0' }}
           draft: false
           prerelease: false
+          make_latest: true
           body: |
             ## 🏋️‍♂️ FitLife AI — Versão Oficial Android
             
